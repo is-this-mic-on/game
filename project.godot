@@ -13,7 +13,6 @@ config_version=5
 config/name="Champions of Strength and Sorcery"
 run/main_scene="uid://cqnd5etbqy0la"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="res://icon.svg"
 
 [display]
 
