@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://b2wu6by1m531f" path="res://assets/Tiny Swords (Free Pack)/Terrain/Resources/Wood/Trees/Tree3.png" id="10_5f8cm"]
 [ext_resource type="Texture2D" uid="uid://b3p7ed7eleykv" path="res://assets/Tiny Swords (Free Pack)/Terrain/Resources/Wood/Trees/Stump 2.png" id="11_gm488"]
 [ext_resource type="Texture2D" uid="uid://coewtyvl3nkli" path="res://assets/Tiny Swords (Free Pack)/Terrain/Decorations/Rocks/Rock1.png" id="12_kay4s"]
-[ext_resource type="Texture2D" uid="uid://5eyegoscsguo" path="res://assets/Tiny Swords (Free Pack)/Terrain/Resources/Gold/Gold Stones/Gold Stone 4.png" id="13_ff6ho"]
+[ext_resource type="PackedScene" uid="uid://bbd24d5ma7vmm" path="res://scenes/gold.tscn" id="13_j7bvy"]
 [ext_resource type="Script" uid="uid://4ns56duopxl1" path="res://scripts/path.gd" id="14_1dqgb"]
 [ext_resource type="PackedScene" uid="uid://duvefoljhxy8k" path="res://scenes/player.tscn" id="15_y81of"]
 
@@ -367,17 +367,13 @@ sources/1 = SubResource("TileSetAtlasSource_ilduj")
 sources/3 = SubResource("TileSetAtlasSource_s2xbw")
 sources/4 = SubResource("TileSetAtlasSource_rdfvj")
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7yos8"]
-texture = ExtResource("13_ff6ho")
-texture_region_size = Vector2i(128, 128)
-0:0/0 = 0
-0:0/0/custom_data_0 = true
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_1of5j"]
+resource_name = "gold"
+scenes/1/scene = ExtResource("13_j7bvy")
 
 [sub_resource type="TileSet" id="TileSet_q8vq6"]
 tile_size = Vector2i(64, 64)
-custom_data_layer_0/name = "gold"
-custom_data_layer_0/type = 1
-sources/0 = SubResource("TileSetAtlasSource_7yos8")
+sources/1 = SubResource("TileSetScenesCollectionSource_1of5j")
 
 [node name="TestMap" type="Node2D" unique_id=819048733]
 script = ExtResource("1_ff6ho")
@@ -426,7 +422,7 @@ tile_map_data = PackedByteArray("AAAGAAIAAQAAAAAAAAAEAP7/AQAAAAAAAAAHAP//AwABAAM
 tile_set = SubResource("TileSet_iw7q2")
 
 [node name="Collectables" type="TileMapLayer" parent="." unique_id=1978888002]
-tile_map_data = PackedByteArray("AAAFAP//AAAAAAAAAAD9/wMAAAAAAAAAAAAGAAUAAAAAAAAAAAALAAoAAAAAAAAAAAARAAUAAAAAAAAAAAAOAP7/AAAAAAAAAAAQAAsAAAAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAAFAP//AQAAAAAAAQD9/wMAAQAAAAAAAQAGAAUAAQAAAAAAAQALAAoAAQAAAAAAAQAQAAsAAQAAAAAAAQARAAUAAQAAAAAAAQAOAP7/AQAAAAAAAQA=")
 tile_set = SubResource("TileSet_q8vq6")
 
 [node name="Path" type="Node2D" parent="." unique_id=1007893400]
@@ -436,3 +432,11 @@ script = ExtResource("14_1dqgb")
 position = Vector2(608, 320)
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=417120956]
+
+[connection signal="area_entered" from="Collectables/Gold" to="Collectables/Gold" method="_on_area_entered"]
+[connection signal="area_entered" from="Collectables/@Area2D@44754" to="Collectables/@Area2D@44754" method="_on_area_entered"]
+[connection signal="area_entered" from="Collectables/@Area2D@44755" to="Collectables/@Area2D@44755" method="_on_area_entered"]
+[connection signal="area_entered" from="Collectables/@Area2D@44756" to="Collectables/@Area2D@44756" method="_on_area_entered"]
+[connection signal="area_entered" from="Collectables/@Area2D@44757" to="Collectables/@Area2D@44757" method="_on_area_entered"]
+[connection signal="area_entered" from="Collectables/@Area2D@44758" to="Collectables/@Area2D@44758" method="_on_area_entered"]
+[connection signal="area_entered" from="Collectables/@Area2D@44759" to="Collectables/@Area2D@44759" method="_on_area_entered"]

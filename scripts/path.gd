@@ -1,6 +1,5 @@
 class_name Path extends Node2D
 
-
 const path_sprite = preload("res://assets/glow.png")
 
 var path: Array[Sprite2D]

@@ -1,6 +1,5 @@
 class_name ResourceUI extends Control
 
-
 @onready var game_manager: GameManager = %GameManager
 @onready var gold_text: Label = $PanelContainer/MarginContainer/HBoxContainer/GoldHBox/GoldText
 

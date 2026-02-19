@@ -1,8 +1,7 @@
 class_name Player extends CharacterBody2D
 
-
 signal reached_step
-
+signal check_collectables
 
 @onready var game_manager: GameManager = %GameManager
 @onready var player_sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -11,7 +10,9 @@ signal reached_step
 
 const MOVE_SPEED := 200.0
 
-var grid_path: Array
+var grid_path: Array[Vector2]
+var world_path: PackedVector2Array
+var curr_path_index: int
 var target_position: Vector2
 var is_moving: bool = false
 
@@ -22,7 +23,7 @@ func _physics_process(delta: float) -> void:
 		return
 
 	if not is_moving:
-		target_position = grid_path.front()
+		target_position = world_path[curr_path_index]
 		is_moving = true
 	
 	var dir := target_position.x - global_position.x
@@ -38,15 +39,12 @@ func move_towards_target(delta: float) -> void:
 	global_position = global_position.move_toward(target_position, MOVE_SPEED * delta)
 
 	if global_position == target_position:
-		grid_path.pop_front()
+		curr_path_index += 1
+		var current_cell = grid_path.pop_front()
 		reached_step.emit()
 
 		if not grid_path.is_empty():
-			target_position = grid_path.front()
+			target_position = world_path[curr_path_index]
 		else:
+			check_collectables.emit(current_cell)
 			is_moving = false
-
-
-func _on_player_area2d_entered(area: Area2D) -> void:
-	if area.is_in_group("gold"):
-		game_manager.gain_gold(1)

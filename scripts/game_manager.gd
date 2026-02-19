@@ -1,8 +1,6 @@
 class_name GameManager extends Node
 
-
 signal gained_gold
-
 
 var gold_count: int = 0
 

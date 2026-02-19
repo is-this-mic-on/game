@@ -1,21 +1,23 @@
 class_name Navigation extends Node2D
 
-
 @onready var player: Player = $Player
 @onready var path_renderer: Path = $Path
+@onready var game_manager: GameManager = $GameManager
 @onready var ground_map: TileMapLayer = $Ground
 @onready var environment_map: TileMapLayer = $Environment
 @onready var plateau_map: TileMapLayer = $Plateau
+@onready var collectables_map: TileMapLayer = $Collectables
 
 const TILE_SIZE := Vector2(64, 64)
 
 var nav_grid: AStarGrid2D
-var world_path: PackedVector2Array	# Used for spawning the sprites indicating path
+var prev_target_cell: Vector2i
 
 
 func _ready() -> void:
 	setup_navigation_grid()
 	player.reached_step.connect(path_renderer.destroy_step)
+	player.check_collectables.connect(gain_any_collectables)
 	
 
 func _input(event: InputEvent) -> void:
@@ -23,6 +25,8 @@ func _input(event: InputEvent) -> void:
 		return
 	elif player.is_moving:
 		player.grid_path = [player.grid_path[0]]
+		player.world_path = [player.world_path[0]]
+		player.curr_path_index = 0
 		path_renderer.clear_path()
 	else:
 		path_renderer.destroy_path()
@@ -33,11 +37,13 @@ func _input(event: InputEvent) -> void:
 	
 	var point_path := get_point_path(start_cell, target_cell)
 	path_renderer.spawn_path(point_path)
-		
-	if point_path == world_path:
-		player.grid_path = get_grid_path(start_cell, target_cell)
-	else:
-		world_path = point_path
+	
+	if target_cell == prev_target_cell:
+		player.world_path = point_path
+		for i in range(not player.is_moving, point_path.size()):
+			player.grid_path.append(ground_map.local_to_map(point_path[i]))
+		player.curr_path_index = not player.is_moving
+	prev_target_cell = target_cell
 
 
 func setup_navigation_grid() -> void:
@@ -73,9 +79,10 @@ func get_point_path(start_cell: Vector2, target_cell: Vector2) -> PackedVector2A
 	return point_path
 
 
-func get_grid_path(start_cell: Vector2, target_cell: Vector2) -> Array[Vector2]:
-	var grid_path: Array[Vector2]
-	var id_path := nav_grid.get_id_path(start_cell, target_cell)
-	for i in range(not player.is_moving, id_path.size()):
-		grid_path.append(ground_map.map_to_local(id_path[i]))
-	return grid_path
+func gain_any_collectables(cell: Vector2i) -> void:
+	var env_data := collectables_map.get_cell_tile_data(cell)
+	if env_data == null:
+		return
+	elif env_data.get_custom_data("gold"):
+		collectables_map.erase_cell(cell)
+		game_manager.gain_gold(1)
