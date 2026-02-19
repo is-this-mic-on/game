@@ -52,17 +52,18 @@ func setup_navigation_grid() -> void:
 	for x in range(used_rect.position.x, used_rect.end.x):
 		for y in range(used_rect.position.y, used_rect.end.y):
 			var cell := Vector2i(x, y)
-			var env_data := environment_map.get_cell_tile_data(cell)
-			var plateau_data := plateau_map.get_cell_tile_data(cell)
-			var has_ground := ground_map.get_cell_tile_data(cell) != null
-
-			if tile_unwalkable(has_ground, env_data, plateau_data):
+			if tile_unwalkable(cell):
 				nav_grid.set_point_solid(cell)
 
-func tile_unwalkable(has_ground: bool, env_data: TileData, plateau_data: TileData) -> bool:
+func tile_unwalkable(cell: Vector2i) -> bool:
+	var env_data := environment_map.get_cell_tile_data(cell)
+	var plateau_data := plateau_map.get_cell_tile_data(cell)
+	var ground_data := ground_map.get_cell_tile_data(cell)
+	
 	var environment_unwalkable: bool = env_data and env_data.get_custom_data("unwalkable")
 	var plateau_edge: bool = plateau_data and plateau_data.get_custom_data("unwalkable")
-	return not has_ground or environment_unwalkable or plateau_edge
+	
+	return ground_data == null and plateau_data == null or environment_unwalkable or plateau_edge
 
 
 func get_point_path(start_cell: Vector2, target_cell: Vector2) -> PackedVector2Array:

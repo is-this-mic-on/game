@@ -11,7 +11,7 @@ signal reached_step
 
 const MOVE_SPEED := 200.0
 
-var grid_path: Array[Vector2]
+var grid_path: Array
 var target_position: Vector2
 var is_moving: bool = false
 
